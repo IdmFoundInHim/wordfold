@@ -1,4 +1,6 @@
 #include <stdarg.h>
+#include <stdint.h>
+typedef uint32_t u_int32_t;
 
 /* is c the start of a utf8 sequence? */
 #define isutf(c) (((c)&0xC0)!=0x80)

@@ -68,19 +68,21 @@ int run_test(utf8s name, utf8s base, utf8s glyph, utf8s expected) {
     utf8s actual = combine(base, glyph);
     if (expected && actual)  {
         if (strcmp(expected, actual)) {
-            printf("Failed test %s with output %s", name, actual);
+            printf("Failed test %s with output %s\n", name, actual);
+/*            int i=0;for(; *(expected + i) == *(actual + i) && i<24; ++i);
+            printf("index: %d\n", i);*/
             return 1;
         }
-        printf("Passed test %s", name);
+        printf("Passed test %s\n", name);
         return 0;
     } else if (expected || actual) {
         if (expected)
-            printf("Failed test %s with no output", name);
+            printf("Failed test %s with no output\n", name);
         else
-            printf("Failed test %s with unexpected output: %s", actual);
+            printf("Failed test %s with unexpected output: %s\n", actual);
         return -1;
     } else
-        printf("Passed test %s with no output", name);
+        printf("Passed test %s with no output\n", name);
     return 0;
 }
 
@@ -94,6 +96,8 @@ utf8s combine(utf8s base, utf8s glyph) {
         return NULL; // Invalid input
     while (*(step.glyph))
          step = combine_loop(step.base, step.glyph, step.out_write);
+    *step.out_write = '\0';
+    return output;
 }
 
 
@@ -119,7 +123,7 @@ combinestep combine_loop(utf8s base, utf8s glyph, utf8s out_write) {
     // Search glyph for first char also in base, appending only non-matches
     int matchloc = 0; // This doesn't get used, just for parameter
     for (utf32c glyphc = u8_nextchar(glyph, &glyph_readi);
-         u8_strchr(base, glyphc, &matchloc) && glyphc;
+         !u8_strchr(base, glyphc, &matchloc) && glyphc;
          glyphc = u8_nextchar(glyph, &glyph_readi))
         out_write += u8_wc_toutf8(out_write, glyphc);
     glyph += --glyph_readi;
