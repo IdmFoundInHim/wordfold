@@ -1,6 +1,6 @@
 #include <stdarg.h>
 
-#include "../src/fold.h"
+#include "../src/fold.c"
 
 int run_test(utf8s name, utf8s base, utf8s glyph, utf8s expected);
 
